@@ -1,2 +1,1 @@
 print("testA")
-print("wr")
