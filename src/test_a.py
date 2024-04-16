@@ -1,2 +1,3 @@
 print("testA")
-print("wr")
+
+print("テストテストテストテスト")
