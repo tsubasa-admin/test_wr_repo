@@ -1,10 +1,10 @@
-name: copy target.yml from repository1
+name: Copy files from repository1
 on:
   repository_dispatch:
     types: [target-updated]
 jobs:
   copy-target:
-    name: copy target.yml
+    name: Copy files from src folder
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -15,17 +15,19 @@ jobs:
           repository: tsubasa-admin/common_repo
           path: common_repo
           token: ${{ secrets.TEST_WR_REPO_ACCESS_TOKEN }}
-      - name: copy common_repo.py
-        run: cp common_repo/common_repo.py common_repo.py
-      - name: clean common_repo
-        run: rm -rf common_repo
+      - name: Create src folder
+        run: mkdir -p src
+      - name: Copy files to src folder
+        run: cp -R common_repo/src/. src/.
+      - name: List copied files
+        run: ls -R src
       - name: create PR
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.TEST_WR_REPO_ACCESS_TOKEN }}
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          commit-message: 'copy common_repo.py'
+          commit-message: 'Copy files to src folder'
           branch: copy_target
           branch-suffix: timestamp
           delete-branch: true
-          title: 'updated common_repo.py'
+          title: 'Update files in src folder'
